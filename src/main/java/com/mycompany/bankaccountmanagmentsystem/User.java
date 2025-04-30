@@ -3,11 +3,47 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.mycompany.bankaccountmanagmentsystem;
+import java.io.*;
+import java.util.*;
 
 /**
  *
  * @author youse
  */
 public class User {
-    
+    private int nationalID;
+    private String fullname;
+    private String email;
+    private String phone;
+    private String address;
+    private String password;
+
+    public User(int id, String fname, String mail, String phonenum, String add, String pword) {
+        id = nationalID;
+        fname = fullname;
+        mail = email;
+        phonenum = phone;
+        add = address;
+        pword = password;
+    }
+
+    public String getDetails() {
+        return "Name: " + fullname + ", Email: " + email + ", Phone: " + phone + ", Address: " + address;
+    }
+
+    public void updateContactInfo(String newPhone) {
+       phone = newPhone;
+    }
+
+    public boolean authenticate(String inputPassword) {
+        return this.password.equals(inputPassword);
+    }
+    public int getNationalID() {
+    return nationalID;
+    }
+
+    public String getPassword() {
+    return password;
+    }
+
 }

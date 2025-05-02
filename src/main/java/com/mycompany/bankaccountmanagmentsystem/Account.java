@@ -4,6 +4,7 @@
  */
 package com.mycompany.bankaccountmanagmentsystem;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 /**
@@ -55,6 +56,13 @@ public class Account {
     public Card getCard() {
         return card;
     }
+public ArrayList<Card> getLinkedCards() {
+    ArrayList<Card> cards = new ArrayList<>();
+    if (this.card != null) {
+        cards.add(this.card);
+    }
+    return cards;
+}
 
     // Card Management
     public void addCard(Card card) {

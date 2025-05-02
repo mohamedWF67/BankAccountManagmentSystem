@@ -14,6 +14,10 @@ public class Card {
     public Card() {
     }
 
+    Card(String abrar_Mansour, int i) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
     public String getCardInfo() {
         return "Card Holder: " + cardHolderName + ", Card Number: " + cardNum;
     }
@@ -80,5 +84,9 @@ public class Card {
         card.expiryMonth = 0;
         card.expiryYear = 0;
         card.cardPIN = 0;
+    }
+
+    boolean isDeactivated() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

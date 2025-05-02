@@ -13,124 +13,112 @@ import java.util.Date;
   
 
 public class Transaction {
-    public static final int DEPOSIT = 1;
-    public static final int WITHDRAW = 2;
-    public static final int TRANSFER = 3;
+    // Fields
+    private int transactionID;
+    private int transactionType; // 1 = Deposit, 2 = Withdrawal, 3 = Transfer
+    private Account senderAccount;
+    private Account receiverAccount;
+    private int amount;
+    private Date timestamp;
 
-    private static final double DAILY_DEPOSIT_LIMIT = 10000;
-    private static final double DAILY_WITHDRAW_LIMIT = 5000;
-    private static final double DAILY_TRANSFER_LIMIT = 25000;
-    private static final double MIN_BALANCE = 100;
-
-    private int id;
-    private int type;
-    private Account sender;
-    private Account receiver;
-    private double amount;
-    private Date date;
-    private String status;
-    private String message;
-
-    // Getters (placed first)
-    public int getTransactionID() { 
-  
-        return transactionID; 
-    }
-    
-    public int getTransactionType() { 
-        return transactionType; 
-    }
-    
-    public Account getSenderAccount() { 
-        return senderAccount; 
-    }
-    
-    public Account getReceiverAccount() { 
-        return receiverAccount; 
-    }
-    
-    public double getAmount() { 
-        return amount; 
-    }
-    
-    public Date getTimestamp() { 
-        Date timestamp = null;
-        zzzzzzreturn timestamp; 
-    }
-    
-    public String getStatus() { 
-        return status; 
-    }
-    
-    public String getReasonCode() { 
-        return reasonCode; 
-    }
-
-    // Constructors
-    public Transaction(int transactionID, int transactionType, Account senderAccount) {
-        this(transactionID, transactionType, senderAccount, null, 0.0);
-    }
-
-    public Transaction(int transactionID, int transactionType, Account senderAccount, 
-                      Account receiverAccount, double amount) {
+    // Constructor for Transfer (with receiver account)
+    public Transaction(int transactionID, int transactionType, int amount, Account receiverAccount) {
         this.transactionID = transactionID;
         this.transactionType = transactionType;
-        this.senderAccount = senderAccount;
-        this.receiverAccount = receiverAccount;
         this.amount = amount;
-        this.date = new Date();
-        this.status = "PENDING";
+        this.receiverAccount = receiverAccount;
+        this.timestamp = new Date();
     }
 
-    public boolean process(int pin) {
-        switch (type) {
-            case DEPOSIT -> {
-                if (amount > DAILY_DEPOSIT_LIMIT) return fail("Deposit limit exceeded");
-                if (sender.deposit(pin, amount)) return success("Deposit successful");
-            }
-            case WITHDRAW -> {
-                if (amount > DAILY_WITHDRAW_LIMIT) return fail("Withdraw limit exceeded");
-                if (sender.getBalance() - amount < MIN_BALANCE) return fail("Below minimum balance");
-                if (sender.withdraw(pin, amount)) return success("Withdrawal successful");
-            }
-            case TRANSFER -> {
-                if (receiver == null) return fail("Receiver not specified");
-                if (amount > DAILY_TRANSFER_LIMIT) return fail("Transfer limit exceeded");
-                if (sender.getBalance() - amount < MIN_BALANCE) return fail("Below minimum balance");
-                if (sender.transferTo(receiver, pin, amount)) return success("Transfer successful");
-            }
+    // Constructor for Deposit or Withdrawal (no receiver)
+    public Transaction(int transactionID, int transactionType, int amount) {
+        this.transactionID = transactionID;
+        this.transactionType = transactionType;
+        this.amount = amount;
+        this.timestamp = new Date();
+    }
+
+    // Getters
+    public int getTransactionID() {
+        return transactionID;
+    }
+
+    public int getTransactionType() {
+        return transactionType;
+    }
+
+    public Account getSenderAccount() {
+        return senderAccount;
+    }
+
+    public Account getReceiverAccount() {
+        return receiverAccount;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    // Set sender account if needed
+    public void setSenderAccount(Account senderAccount) {
+        this.senderAccount = senderAccount;
+    }
+
+    // Methods
+    public String getTransactionDetails() {
+        return "Transaction ID: " + transactionID +
+               "\nType: " + getTypeName() +
+               "\nAmount: " + amount +
+               "\nTimestamp: " + timestamp;
+    }
+
+    public boolean withdrawMoney(double amount) {
+        if (senderAccount != null && senderAccount.getBalance() >= amount) {
+            senderAccount.withdraw(amount);
+            System.out.println("Withdrawn $" + amount + " from account.");
+            return true;
         }
-        return fail("Transaction failed");
-    }
-
-    private boolean success(String msg) {
-        status = "COMPLETED";
-        message = msg;
-        System.out.println("[TXN " + id + "] " + msg);
-        return true;
-    }
-
-    private boolean fail(String msg) {
-        status = "FAILED";
-        message = msg;
-        System.out.println("[TXN " + id + "] Failed: " + msg);
+        System.out.println("Withdrawal failed: insufficient balance.");
         return false;
     }
 
-    @Override
-    public String toString() {
-        return String.format("Transaction #%d | Type: %s | Amount: %.2f | Status: %s",
-                id, getTypeName(), amount, status);
+    public boolean depositMoney(double amount) {
+        if (senderAccount != null) {
+            senderAccount.deposit(amount);
+            System.out.println("Deposited $" + amount + " to account.");
+            return true;
+        }
+        System.out.println("Deposit failed: sender account not set.");
+        return false;
+    }
+
+    public boolean transferMoney(double amount, Account receiverAccount) {
+        if (senderAccount != null && receiverAccount != null && senderAccount.getBalance() >= amount) {
+            senderAccount.withdraw(amount);
+            receiverAccount.deposit(amount);
+            System.out.println("Transferred $" + amount + " to receiver account.");
+            return true;
+        }
+        System.out.println("Transfer failed.");
+        return false;
+    }
+
+    public boolean generateReport() {
+        System.out.println("==== Transaction Report ====");
+        System.out.println(getTransactionDetails());
+        return true;
     }
 
     private String getTypeName() {
-        return switch (type) {
-            case DEPOSIT -> "Deposit";
-            case WITHDRAW -> "Withdraw";
-            case TRANSFER -> "Transfer";
+        return switch (transactionType) {
+            case 1 -> "Deposit";
+            case 2 -> "Withdrawal";
+            case 3 -> "Transfer";
             default -> "Unknown";
         };
     }
 }
-
-    

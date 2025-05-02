@@ -10,30 +10,30 @@ import java.util.Date;
  *
  * @author abrar
  */
-public class Transaction {
-    // Constants
-    public static final int DEPOSIT = 1;
-    public static final int WITHDRAWAL = 2;
-    public static final int TRANSFER = 3;
-    
-    // Transaction limits
-    private static final int DAILY_DEPOSIT_LIMIT = 10000;//DAILY_DEPOSIT_LIMIT 
-    private static final int DAILY_WITHDRAWAL_LIMIT = 5000;//DAILY_WITHDRAWAL_LIMIT
-    private static final int DAILY_TRANSFER_LIMIT = 25000;//DAILY_TRANSFER_LIMIT
-    private static final int MINIMUM_BALANCE = 100;//MINIMUM_BALANCE
+  
 
-    // Fields
-    private int transactionID;
-    private int transactionType;
-    private Account senderAccount;
-    private Account receiverAccount;
+public class Transaction {
+    public static final int DEPOSIT = 1;
+    public static final int WITHDRAW = 2;
+    public static final int TRANSFER = 3;
+
+    private static final double DAILY_DEPOSIT_LIMIT = 10000;
+    private static final double DAILY_WITHDRAW_LIMIT = 5000;
+    private static final double DAILY_TRANSFER_LIMIT = 25000;
+    private static final double MIN_BALANCE = 100;
+
+    private int id;
+    private int type;
+    private Account sender;
+    private Account receiver;
     private double amount;
-    private Date timestamp;
+    private Date date;
     private String status;
-    private String reasonCode;
+    private String message;
 
     // Getters (placed first)
     public int getTransactionID() { 
+  
         return transactionID; 
     }
     
@@ -54,7 +54,8 @@ public class Transaction {
     }
     
     public Date getTimestamp() { 
-        return timestamp; 
+        Date timestamp = null;
+        zzzzzzreturn timestamp; 
     }
     
     public String getStatus() { 
@@ -77,132 +78,59 @@ public class Transaction {
         this.senderAccount = senderAccount;
         this.receiverAccount = receiverAccount;
         this.amount = amount;
-        this.timestamp = new Date();
+        this.date = new Date();
         this.status = "PENDING";
-        this.reasonCode = "";
     }
 
-    // Core business methods
-    public boolean processTransaction() {
-        if (senderAccount == null || senderAccount.isFrozen()) {
-            setFailure("Invalid or frozen sender account");
-            return false;
-        }
-
-        switch (transactionType) {
+    public boolean process(int pin) {
+        switch (type) {
             case DEPOSIT -> {
-                return processDeposit();
+                if (amount > DAILY_DEPOSIT_LIMIT) return fail("Deposit limit exceeded");
+                if (sender.deposit(pin, amount)) return success("Deposit successful");
             }
-            case WITHDRAWAL -> {
-                return processWithdrawal();
+            case WITHDRAW -> {
+                if (amount > DAILY_WITHDRAW_LIMIT) return fail("Withdraw limit exceeded");
+                if (sender.getBalance() - amount < MIN_BALANCE) return fail("Below minimum balance");
+                if (sender.withdraw(pin, amount)) return success("Withdrawal successful");
             }
             case TRANSFER -> {
-                return processTransfer();
+                if (receiver == null) return fail("Receiver not specified");
+                if (amount > DAILY_TRANSFER_LIMIT) return fail("Transfer limit exceeded");
+                if (sender.getBalance() - amount < MIN_BALANCE) return fail("Below minimum balance");
+                if (sender.transferTo(receiver, pin, amount)) return success("Transfer successful");
             }
-            default -> {
-                setFailure("Invalid transaction type");
-                return false;
-            }
         }
+        return fail("Transaction failed");
     }
 
-    private boolean processDeposit() {
-        if (amount <= 0) {
-            setFailure("Deposit amount must be positive");
-            return false;
-        }
-
-        if (amount > DAILY_DEPOSIT_LIMIT) {
-            setFailure("Exceeds daily deposit limit of " + DAILY_DEPOSIT_LIMIT);
-            return false;
-        }
-
-        senderAccount.deposit(amount);
-        setSuccess("Deposit processed");
+    private boolean success(String msg) {
+        status = "COMPLETED";
+        message = msg;
+        System.out.println("[TXN " + id + "] " + msg);
         return true;
     }
 
-    private boolean processWithdrawal() {
-        if (amount <= 0) {
-            setFailure("Withdrawal amount must be positive");
-            return false;
-        }
-
-        if (amount > DAILY_WITHDRAWAL_LIMIT) {
-            setFailure("Exceeds daily withdrawal limit of " + DAILY_WITHDRAWAL_LIMIT);
-            return false;
-        }
-
-        double availableBalance = senderAccount.getBalance() - MINIMUM_BALANCE;
-        if (amount > availableBalance) {
-            setFailure("Insufficient funds. Available: " + availableBalance);
-            return false;
-        }
-
-        senderAccount.withdraw(amount);
-        setSuccess("Withdrawal processed");
-        return true;
-    }
-
-    private boolean processTransfer() {
-        if (receiverAccount == null || receiverAccount.isFrozen()) {
-            setFailure("Invalid or frozen recipient account");
-            return false;
-        }
-
-        if (amount <= 0) {
-            setFailure("Transfer amount must be positive");
-            return false;
-        }
-
-        if (amount > DAILY_TRANSFER_LIMIT) {
-            setFailure("Exceeds daily transfer limit of " + DAILY_TRANSFER_LIMIT);
-            return false;
-        }
-
-        double availableBalance = senderAccount.getBalance() - MINIMUM_BALANCE;
-        if (amount > availableBalance) {
-            setFailure("Insufficient funds. Available: " + availableBalance);
-            return false;
-        }
-
-        senderAccount.withdraw(amount);
-        receiverAccount.deposit(amount);
-        setSuccess("Transfer processed");
-        return true;
-    }
-
-    // Helper methods
-    private void setSuccess(String message) {
-        this.status = "COMPLETED";
-        this.reasonCode = "SUCCESS";
-        logTransaction(message);
-    }
-
-    private void setFailure(String reason) {
-        this.status = "FAILED";
-        this.reasonCode = reason.replaceAll(" ", "_").toUpperCase();
-        logTransaction("Failed: " + reason);
-    }
-
-    private void logTransaction(String message) {
-        System.out.println("[TXN-" + transactionID + "] " + message);
+    private boolean fail(String msg) {
+        status = "FAILED";
+        message = msg;
+        System.out.println("[TXN " + id + "] Failed: " + msg);
+        return false;
     }
 
     @Override
     public String toString() {
-        return String.format(
-            "Transaction[ID:%d, Type:%s, Amount:%.2f, Status:%s, Reason:%s]",
-            transactionID, getTypeName(), amount, status, reasonCode
-        );
+        return String.format("Transaction #%d | Type: %s | Amount: %.2f | Status: %s",
+                id, getTypeName(), amount, status);
     }
 
     private String getTypeName() {
-        return switch (transactionType) {
-            case DEPOSIT -> "DEPOSIT";
-            case WITHDRAWAL -> "WITHDRAWAL";
-            case TRANSFER -> "TRANSFER";
-            default -> "UNKNOWN";
+        return switch (type) {
+            case DEPOSIT -> "Deposit";
+            case WITHDRAW -> "Withdraw";
+            case TRANSFER -> "Transfer";
+            default -> "Unknown";
         };
     }
 }
+
+    

@@ -6,10 +6,7 @@ package com.mycompany.bankaccountmanagmentsystem;
 import java.io.*;
 import java.util.*;
 
-/**
- *
- * @author youse
- */
+
 public class User {
     private int nationalID;
     private String fullname;

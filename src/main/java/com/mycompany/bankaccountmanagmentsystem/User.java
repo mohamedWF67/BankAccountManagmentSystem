@@ -19,12 +19,12 @@ public class User {
     private String password;
 
     public User(int id, String fname, String mail, String phonenum, String add, String pword) {
-        id = nationalID;
-        fname = fullname;
-        mail = email;
-        phonenum = phone;
-        add = address;
-        pword = password;
+        nationalID=id;
+        fullname=fname;
+        email=mail;
+        phone= phonenum;
+        address=add;
+        password=pword;
     }
 
     public String getDetails() {

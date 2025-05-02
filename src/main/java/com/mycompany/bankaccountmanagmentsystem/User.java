@@ -38,6 +38,10 @@ public class User {
     public int getNationalID() {
     return nationalID;
     }
+    public void setAddress(String address) {
+    this.address = address;
+    }
+
 
     public String getPassword() {
     return password;

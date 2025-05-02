@@ -4,6 +4,8 @@
  */
 package com.mycompany.bankaccountmanagmentsystem;
 import java.time.LocalDate;
+import java.util.Random;
+
 /**
  *
  * @author abrar
@@ -18,14 +20,14 @@ public class Card {
     private boolean isActive;
 
     // Constructor
-    public Card(int cardNum, String cardHolderName, int CVV, 
-                int expiryMonth, int expiryYear, int cardPIN) {
-        this.cardNum = cardNum;
+    public Card(String cardHolderName,int Pin) {
+        Random random = new Random();
+        this.cardNum = 100000000 + random.nextInt(900000000); // 9-digit card number
         this.cardHolderName = cardHolderName;
-        this.CVV = CVV;
-        this.expiryMonth = expiryMonth;
-        this.expiryYear = expiryYear;
-        this.cardPIN = cardPIN;
+        this.CVV = 100 + random.nextInt(900); // 3-digit CVV
+        this.expiryMonth = 1 + random.nextInt(12); // Month between 1 and 12
+        this.expiryYear = LocalDate.now().getYear() + 1 + random.nextInt(5); // Year between next year and next 5 years
+        this.cardPIN = Pin; // 4-digit PIN
         this.isActive = true;
     }
 
@@ -81,6 +83,10 @@ public class Card {
         LocalDate currentDate = LocalDate.now();
         LocalDate expiryDate = LocalDate.of(expiryYear, expiryMonth, 1);
         return currentDate.isAfter(expiryDate);
+    }
+
+    public boolean isDeactivated() {
+        return !isActive;
     }
 
     public void deactivateCard() {

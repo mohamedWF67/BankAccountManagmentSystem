@@ -3,6 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.mycompany.bankaccountmanagmentsystem;
+
+import java.util.UUID;
+
 /**
  *
  
@@ -18,6 +21,7 @@ public class Account {
 
     // Constructors
     public Account() {
+        this.CCN = generateRandomCCN();
         this.balance = 0.0;
         this.isFrozen = false;
     }
@@ -25,6 +29,10 @@ public class Account {
     public Account(double initialBalance) {
         this();
         this.balance = initialBalance;
+    }
+
+    private int generateRandomCCN() {
+        return UUID.randomUUID().toString().hashCode();
     }
 
     // Getters and Setters
@@ -58,8 +66,12 @@ public class Account {
         System.out.println("Card successfully linked to account " + CCN);
     }
 
-    // Account Operations - amount parameters as int, balance as double
     public boolean withdrawMoney(int pin, int amount) {
+        return withdrawMoney(pin, amount, false);
+    }
+
+    // Account Operations - amount parameters as int, balance as double
+    public boolean withdrawMoney(int pin, int amount,boolean internal) {
         if (isFrozen) {
             System.out.println("Account is frozen");
             return false;
@@ -67,6 +79,11 @@ public class Account {
 
         if (card == null || !card.checkPIN(pin)) {
             System.out.println("Invalid card or PIN");
+            return false;
+        }
+
+        if (card.isExpired() || card.isDeactivated()) {
+            System.out.println("Card deactivated or expired");
             return false;
         }
 
@@ -77,6 +94,10 @@ public class Account {
 
         if (balance >= amount) {
             balance -= amount;
+            if (!internal) {
+                Transaction transaction = new Transaction(2,this,amount);
+                DataHandler.addTransaction(transaction);
+            }
             System.out.printf("Withdrawn $%d from account %d. New balance: $%.2f%n", 
                             amount, CCN, balance);
             return true;
@@ -87,31 +108,49 @@ public class Account {
     }
 
     public boolean depositMoney(int pin, int amount) {
-        if (isFrozen) {
-            System.out.println("Account is frozen");
-            return false;
-        }
+        return depositMoney(pin, amount, false);
+    }
 
-        if (card == null || !card.checkPIN(pin)) {
-            System.out.println("Invalid card or PIN");
-            return false;
-        }
+    public boolean depositMoney(int pin, int amount,boolean internal) {
+            if (isFrozen) {
+                System.out.println("Account is frozen");
+                return false;
+            }
 
-        if (amount <= 0) {
-            System.out.println("Amount must be positive");
-            return false;
-        }
+            if (card == null || !card.checkPIN(pin)) {
+                System.out.println("Invalid card or PIN");
+                return false;
+            }
 
-        balance += amount;
-        System.out.printf("Deposited $%d to account %d. New balance: $%.2f%n", 
-                         amount, CCN, balance);
-        return true;
+            if (card.isExpired() || card.isDeactivated()) {
+                System.out.println("Card deactivated or expired");
+                return false;
+            }
+
+            if (amount <= 0) {
+                System.out.println("Amount must be positive");
+                return false;
+            }
+
+            balance += amount;
+            System.out.printf("Deposited $%d to account %d. New balance: $%.2f%n",
+                    amount, CCN, balance);
+            if (!internal) {
+                Transaction transaction = new Transaction(1,this,amount);
+                DataHandler.addTransaction(transaction);
+            }
+            return true;
     }
 
     public boolean transferMoney(int pin, int amount, int targetAccount) {
-        if (!withdrawMoney(pin, amount)) {
+        if (!withdrawMoney(pin, amount,true)) {
             return false;
         }
+        if (!DataHandler.getAccount(targetAccount).depositMoney(pin, amount,true)) {
+            return false;
+        }
+        Transaction transaction = new Transaction(3,this,DataHandler.getAccount(targetAccount),amount);
+        DataHandler.addTransaction(transaction);
         System.out.printf("Transferred $%d from account %d to account %d%n", 
                          amount, CCN, targetAccount);
         return true;

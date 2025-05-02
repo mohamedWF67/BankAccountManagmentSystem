@@ -10,4 +10,11 @@
         <maven.compiler.release>23</maven.compiler.release>
         <exec.mainClass>com.mycompany.bankaccountmanagmentsystem.BankAccountManagmentSystem</exec.mainClass>
     </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derbyclient</artifactId>
+            <version>10.17.1.0</version>
+        </dependency>
+    </dependencies>
 </project>

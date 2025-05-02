@@ -5,6 +5,7 @@
 package com.mycompany.bankaccountmanagmentsystem;
 
 import java.util.Date;
+import java.util.UUID;
 
 /**
  *
@@ -66,19 +67,19 @@ public class Transaction {
     }
 
     // Constructors
-    public Transaction(int transactionID, int transactionType, Account senderAccount) {
-        this(transactionID, transactionType, senderAccount, null, 0.0);
+    public Transaction( int transactionType, Account senderAccount,double amount) {
+        this(transactionType, senderAccount, null, amount);
     }
 
-    public Transaction(int transactionID, int transactionType, Account senderAccount, 
+    public Transaction(int transactionType, Account senderAccount,
                       Account receiverAccount, double amount) {
-        this.transactionID = transactionID;
+        this.transactionID = UUID.randomUUID().toString().hashCode();
         this.transactionType = transactionType;
         this.senderAccount = senderAccount;
         this.receiverAccount = receiverAccount;
         this.amount = amount;
         this.timestamp = new Date();
-        this.status = "PENDING";
+        this.status = "Success";
         this.reasonCode = "";
     }
 

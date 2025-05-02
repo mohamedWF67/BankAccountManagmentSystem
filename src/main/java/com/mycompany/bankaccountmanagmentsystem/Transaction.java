@@ -63,12 +63,11 @@ public class Transaction {
         return timestamp;
     }
 
-    // Set sender account if needed
     public void setSenderAccount(Account senderAccount) {
         this.senderAccount = senderAccount;
     }
 
-    // Methods
+  
     public String getTransactionDetails() {
         return "Transaction ID: " + transactionID +
                "\nType: " + getTypeName() +

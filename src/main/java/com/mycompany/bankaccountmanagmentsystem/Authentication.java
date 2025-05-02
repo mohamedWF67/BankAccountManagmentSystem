@@ -36,6 +36,10 @@ public class Authentication {
             System.err.println("Error writing to user file: " + e.getMessage());
         }
     }
+    public boolean isValidEmail(String email) {
+    return email.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$");
+}
+
     public boolean isValidPassword(String password) {
     boolean hasUpper = false;
     boolean hasDigit = false;

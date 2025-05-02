@@ -18,6 +18,7 @@ public class AuthManagerUI {
         }
     }
 
+    
 public void viewRegister() {
 
 }

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.bankaccountmanagmentsystem;
 
 import java.util.Date;
@@ -33,7 +29,6 @@ public class Transaction {
     private String status;
     private String reasonCode;
 
-    // Getters (placed first)
     public int getTransactionID() { 
         return transactionID; 
     }
@@ -66,7 +61,6 @@ public class Transaction {
         return reasonCode; 
     }
 
-    // Constructors
     public Transaction( int transactionType, Account senderAccount,double amount) {
         this(transactionType, senderAccount, null, amount);
     }
@@ -83,7 +77,6 @@ public class Transaction {
         this.reasonCode = "";
     }
 
-    // Core business methods
     public boolean processTransaction() {
         if (senderAccount == null || senderAccount.isFrozen()) {
             setFailure("Invalid or frozen sender account");
@@ -173,7 +166,6 @@ public class Transaction {
         return true;
     }
 
-    // Helper methods
     private void setSuccess(String message) {
         this.status = "COMPLETED";
         this.reasonCode = "SUCCESS";

@@ -37,7 +37,8 @@ public class Account {
         return true;
     }
 
-    public boolean withdraw(int pin, double amount) {
+    public boolean withdraw(double amount) {
+        int pin = 0;
         if (!canTransact(pin, amount)) return false;
         if (balance >= amount) {
             balance -= amount;
@@ -50,7 +51,7 @@ public class Account {
     }
 
     public boolean transferTo(Account target, int pin, double amount) {
-        if (withdraw(pin, amount)) {
+        if (withdraw(amount)) {
             target.balance += amount;
             System.out.printf("Transferred $%.2f to account %d.%n", amount, target.accountNumber);
             return true;
@@ -96,5 +97,9 @@ public class Account {
     public String toString() {
         return String.format("Account #%d | Balance: $%.2f | Frozen: %s",
                              accountNumber, balance, isFrozen ? "Yes" : "No");
+    }
+
+    void deposit(double amount) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

@@ -3,8 +3,48 @@ package com.mycompany.bankaccountmanagmentsystem;
 import java.util.ArrayList;
 
 public class DataHandler {
+    private static ArrayList<Client> clients = new ArrayList<>();
     private static ArrayList<Account> accounts = new ArrayList<>();
     private static ArrayList<Transaction> transactions = new ArrayList<>();
+
+    // CREATE
+    public static void createClient(Client client) {
+        clients.add(client);
+    }
+
+    // READ
+    public static Client getClientByID(int clientID) {
+        for (Client c : clients) {
+            if (c.setClientID(clientID) == clientID) {
+                return c;
+            }
+        }
+        return null;
+    }
+
+    public static ArrayList<Client> getAllClients() {
+        return clients;
+    }
+
+    // UPDATE
+    public static boolean updateClientAddress(int clientID, String newAddress) {
+        Client c = getClientByID(clientID);
+        if (c != null) {
+            c.setAdd(newAddress);
+            return true;
+        }
+        return false;
+    }
+
+    // DELETE
+    public static boolean deleteClient(int clientID) {
+        Client c = getClientByID(clientID);
+        if (c != null) {
+            return clients.remove(c);
+        }
+        return false;
+    }
+
     // Create
     public static void createAccount(Account account) {
         accounts.add(account);

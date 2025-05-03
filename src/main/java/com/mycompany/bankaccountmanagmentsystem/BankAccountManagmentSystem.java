@@ -4,12 +4,7 @@
 
 package com.mycompany.bankaccountmanagmentsystem;
 
-import javax.xml.crypto.Data;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
+import com.mycompany.bankaccountmanagmentsystem.Auth.AuthManagerUI;
 
 /**
  *
@@ -32,7 +27,7 @@ public class BankAccountManagmentSystem {
         account.transferMoney(1234,120, account2.getCCN());
         account.depositMoney(1234,1200);
         account2.depositMoney(1234,1200);
-
+        new AuthManagerUI();
     }
 }
 

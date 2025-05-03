@@ -1,15 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.bankaccountmanagmentsystem;
-import java.time.LocalDate;
-import java.util.Random;
 
-/**
- *
- * @author abrar
- */
+
+import java.time.LocalDate;
+
 public class Card {
     private int cardNum;
     private String cardHolderName;
@@ -17,85 +10,83 @@ public class Card {
     private int expiryMonth;
     private int expiryYear;
     private int cardPIN;
-    private boolean isActive;
 
-    // Constructor
-    public Card(String cardHolderName,int Pin) {
-        Random random = new Random();
-        this.cardNum = 100000000 + random.nextInt(900000000); // 9-digit card number
-        this.cardHolderName = cardHolderName;
-        this.CVV = 100 + random.nextInt(900); // 3-digit CVV
-        this.expiryMonth = 1 + random.nextInt(12); // Month between 1 and 12
-        this.expiryYear = LocalDate.now().getYear() + 1 + random.nextInt(5); // Year between next year and next 5 years
-        this.cardPIN = Pin; // 4-digit PIN
-        this.isActive = true;
+    public Card() {
     }
 
-    // Getters
+    Card(String abrar_Mansour, int i) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
     public String getCardInfo() {
-        return String.format(
-            "Card Number: %d\nHolder: %s\nExpiry: %02d/%d\nCVV: %03d",
-            cardNum, cardHolderName, expiryMonth, expiryYear, CVV
-        );
+        return "Card Holder: " + cardHolderName + ", Card Number: " + cardNum;
     }
 
-    // Setters
     public void setCardNum(int cardNum) {
         this.cardNum = cardNum;
     }
 
-    public void setCardHolderName(String cardHolderName) {
-        this.cardHolderName = cardHolderName;
+    public void setCardHolderName(String name) {
+        this.cardHolderName = name;
     }
 
     public void setCVV(int CVV) {
         this.CVV = CVV;
     }
 
-    public void setExpiryMonth(int expiryMonth) {
-        this.expiryMonth = expiryMonth;
+    public void setExpiryMonth(int month) {
+        this.expiryMonth = month;
     }
 
-    public void setExpiryYear(int expiryYear) {
-        this.expiryYear = expiryYear;
+    public void setExpiryYear(int year) {
+        this.expiryYear = year;
     }
 
-    public void setCardPIN(int cardPIN) {
-        this.cardPIN = cardPIN;
+    public void setCardPIN(int pin) {
+        this.cardPIN = pin;
     }
 
-    // Card Operations
-    public boolean validateCard(int cardNum, int CVV, int expiryMonth, int expiryYear, int PIN) {
-        return this.cardNum == cardNum &&
-               this.CVV == CVV &&
-               this.expiryMonth == expiryMonth &&
-               this.expiryYear == expiryYear &&
-               this.cardPIN == PIN &&
-               isActive &&
-               !isExpired();
+    public boolean validateCard(int cardNum, int pin, int CVV, int month, int year) {
+        if (this.cardNum == cardNum &&
+            this.cardPIN == pin &&
+            this.CVV == CVV &&
+            this.expiryMonth == month &&
+            this.expiryYear == year) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    public boolean checkPIN(int PIN) {
-        return this.cardPIN == PIN && isActive && !isExpired();
+    public boolean checkPIN(int inputPIN) {
+        if (this.cardPIN == inputPIN) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public boolean isExpired() {
-        LocalDate currentDate = LocalDate.now();
-        LocalDate expiryDate = LocalDate.of(expiryYear, expiryMonth, 1);
-        return currentDate.isAfter(expiryDate);
+        LocalDate today = LocalDate.now();
+        if (expiryYear < today.getYear()) {
+            return true;
+        } else if (expiryYear == today.getYear() && expiryMonth < today.getMonthValue()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    public boolean isDeactivated() {
-        return !isActive;
+    public void deactivateCard(Card card) {
+        card.cardNum = 0;
+        card.cardHolderName = "";
+        card.CVV = 0;
+        card.expiryMonth = 0;
+        card.expiryYear = 0;
+        card.cardPIN = 0;
     }
 
-    public void deactivateCard() {
-        isActive = false;
-        System.out.println("Card has been deactivated");
-    }
-
-    public void activateCard() {
-        isActive = true;
-        System.out.println("Card has been activated");
+    boolean isDeactivated() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

@@ -1,3 +1,7 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package com.mycompany.bankaccountmanagmentsystem;
 
 import java.util.Date;
@@ -12,9 +16,9 @@ public class Transaction {
     public static final int DEPOSIT = 1;
     public static final int WITHDRAWAL = 2;
     public static final int TRANSFER = 3;
-    
+
     // Transaction limits
-    private static final int DAILY_DEPOSIT_LIMIT = 10000;//DAILY_DEPOSIT_LIMIT 
+    private static final int DAILY_DEPOSIT_LIMIT = 10000;//DAILY_DEPOSIT_LIMIT
     private static final int DAILY_WITHDRAWAL_LIMIT = 5000;//DAILY_WITHDRAWAL_LIMIT
     private static final int DAILY_TRANSFER_LIMIT = 25000;//DAILY_TRANSFER_LIMIT
     private static final int MINIMUM_BALANCE = 100;//MINIMUM_BALANCE
@@ -29,44 +33,46 @@ public class Transaction {
     private String status;
     private String reasonCode;
 
-    public int getTransactionID() { 
-        return transactionID; 
-    }
-    
-    public int getTransactionType() { 
-        return transactionType; 
-    }
-    
-    public Account getSenderAccount() { 
-        return senderAccount; 
-    }
-    
-    public Account getReceiverAccount() { 
-        return receiverAccount; 
-    }
-    
-    public double getAmount() { 
-        return amount; 
-    }
-    
-    public Date getTimestamp() { 
-        return timestamp; 
-    }
-    
-    public String getStatus() { 
-        return status; 
-    }
-    
-    public String getReasonCode() { 
-        return reasonCode; 
+    // Getters (placed first)
+    public int getTransactionID() {
+        return transactionID;
     }
 
+    public int getTransactionType() {
+        return transactionType;
+    }
+
+    public Account getSenderAccount() {
+        return senderAccount;
+    }
+
+    public Account getReceiverAccount() {
+        return receiverAccount;
+    }
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public String getReasonCode() {
+        return reasonCode;
+    }
+
+    // Constructors
     public Transaction( int transactionType, Account senderAccount,double amount) {
         this(transactionType, senderAccount, null, amount);
     }
 
     public Transaction(int transactionType, Account senderAccount,
-                      Account receiverAccount, double amount) {
+                       Account receiverAccount, double amount) {
         this.transactionID = UUID.randomUUID().toString().hashCode();
         this.transactionType = transactionType;
         this.senderAccount = senderAccount;
@@ -77,6 +83,7 @@ public class Transaction {
         this.reasonCode = "";
     }
 
+    // Core business methods
     public boolean processTransaction() {
         if (senderAccount == null || senderAccount.isFrozen()) {
             setFailure("Invalid or frozen sender account");
@@ -166,6 +173,7 @@ public class Transaction {
         return true;
     }
 
+    // Helper methods
     private void setSuccess(String message) {
         this.status = "COMPLETED";
         this.reasonCode = "SUCCESS";
@@ -185,8 +193,8 @@ public class Transaction {
     @Override
     public String toString() {
         return String.format(
-            "Transaction[ID:%d, Type:%s, Amount:%.2f, Status:%s, Reason:%s]",
-            transactionID, getTypeName(), amount, status, reasonCode
+                "Transaction[ID:%d, Type:%s, Amount:%.2f, Status:%s, Reason:%s]",
+                transactionID, getTypeName(), amount, status, reasonCode
         );
     }
 

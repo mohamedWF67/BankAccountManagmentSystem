@@ -4,14 +4,21 @@
  */
 package com.mycompany.bankaccountmanagmentsystem.MainApp;
 
+import com.mycompany.bankaccountmanagmentsystem.Account;
+import com.mycompany.bankaccountmanagmentsystem.Client;
+import com.mycompany.bankaccountmanagmentsystem.DataHandler;
 import com.mycompany.bankaccountmanagmentsystem.User;
+
+import javax.swing.*;
+import java.util.ArrayList;
 
 /**
  *
  * @author mohamed waleed
  */
 public class CustomerApp extends javax.swing.JFrame {
-    private User currrentUser;
+    private Client currrentUser;
+    private Account currrentAccount;
     /**
      * Creates new form CustomerApp
      */
@@ -19,12 +26,13 @@ public class CustomerApp extends javax.swing.JFrame {
         initComponents();
     }
 
-    public CustomerApp(User user) {
+    public CustomerApp(Client user) {
         initComponents();
         currrentUser = user;
         setLocationRelativeTo(null);
         setVisible(true);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        reloadAccounts();
     }
 
     /**
@@ -38,7 +46,14 @@ public class CustomerApp extends javax.swing.JFrame {
 
         Main = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
+        jTextField2 = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jTextField3 = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        Transfer = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
+        jTextField1 = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
@@ -49,28 +64,77 @@ public class CustomerApp extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jLabel3.setText("Transfer to");
+
+        jLabel4.setText("Amount");
+
+        Transfer.setText("Transfer");
+        Transfer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TransferActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 856, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(137, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4)
+                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(84, 84, 84)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3)
+                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(173, 173, 173))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(367, 367, 367)
+                .addComponent(Transfer)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 580, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(158, 158, 158)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(47, 47, 47)
+                .addComponent(Transfer)
+                .addContainerGap(300, Short.MAX_VALUE))
         );
 
         Main.addTab("Transfer Money", jPanel1);
+
+        jLabel2.setText("Balance");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 856, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(299, 299, 299)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(356, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 580, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(85, 85, 85)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(447, Short.MAX_VALUE))
         );
 
         Main.addTab("Balance", jPanel2);
@@ -101,6 +165,11 @@ public class CustomerApp extends javax.swing.JFrame {
 
         Main.addTab("Details", jPanel4);
 
+        jList1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jList1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jList1);
 
         Add_Account.setText("Add Account");
@@ -160,8 +229,43 @@ public class CustomerApp extends javax.swing.JFrame {
 
     private void Add_AccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Add_AccountActionPerformed
         // TODO add your handling code here:
-        
+        double value = Integer.parseInt(JOptionPane.showInputDialog(null,"Enter Initial Balance"));
+        int pin = Integer.parseInt(JOptionPane.showInputDialog(null,"Enter Card Pin Number"));
+        currrentUser.addAccount(pin,value);
+        reloadAccounts();
     }//GEN-LAST:event_Add_AccountActionPerformed
+
+    private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList1MouseClicked
+        // TODO add your handling code here:
+        currrentAccount = currrentUser.getAccount(Integer.parseInt(jList1.getSelectedValue()));
+        reloadBalance();
+    }//GEN-LAST:event_jList1MouseClicked
+
+    private void TransferActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TransferActionPerformed
+        // TODO add your handling code here:
+        double value = Integer.parseInt(jTextField3.getText());
+        int ccn = Integer.parseInt(jTextField2.getText());
+        int pin = Integer.parseInt(JOptionPane.showInputDialog(null,"Enter Pin"));
+        if (currrentAccount.transferMoney(pin,value,ccn)){
+            JOptionPane.showMessageDialog(null,"Transfer Successful");
+        }else{
+            JOptionPane.showMessageDialog(null,"Transfer Failed");
+        }
+        reloadBalance();
+    }//GEN-LAST:event_TransferActionPerformed
+
+    private void reloadAccounts(){
+        ArrayList<Account> accounts = currrentUser.getAccounts();
+        jList1.setModel(new AbstractListModel<String>() {
+            String[] strings = accounts.stream().map(account -> String.valueOf(account.getCCN())).toArray(String[]::new);
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+    }
+
+    private void reloadBalance(){
+        jTextField1.setText(currrentAccount.getBalance()+"");
+    }
 
     /**
      * @param args the command line arguments
@@ -201,7 +305,11 @@ public class CustomerApp extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Add_Account;
     private javax.swing.JTabbedPane Main;
+    private javax.swing.JButton Transfer;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JList<String> jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -209,5 +317,8 @@ public class CustomerApp extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField jTextField3;
     // End of variables declaration//GEN-END:variables
 }

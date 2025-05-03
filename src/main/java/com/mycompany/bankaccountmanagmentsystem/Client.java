@@ -19,6 +19,10 @@ public class Client extends User {
         return accounts;
     }
 
+    public Account getAccount(int accountID) {
+        return accounts.stream().filter(account -> account.getCCN() == accountID).findFirst().orElse(null);
+    }
+
     public int setClientID(int id) {
         this.clientID = id;
         return this.clientID;
@@ -30,9 +34,10 @@ public class Client extends User {
         return newAddress;
     }
 
-    public void addAccount(double initialBalance) {
-        Account newAccount = new Account(initialBalance);
+    public void addAccount(int pin,double initialBalance) {
+        Account newAccount = new Account(pin,initialBalance);
         accounts.add(newAccount);
+        DataHandler.addAccount(newAccount);
     }
 
     public ArrayList<Card> getLinkedCards() {

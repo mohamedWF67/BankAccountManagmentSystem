@@ -1,4 +1,7 @@
-
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package com.mycompany.bankaccountmanagmentsystem;
 
 import java.util.ArrayList;
@@ -6,7 +9,7 @@ import java.util.UUID;
 
 /**
  *
- 
+
  * @author abrar
  */
 
@@ -14,25 +17,27 @@ import java.util.UUID;
 public class Account {
     private int CCN; // Customer Account Number
     private Card card;
-    private double balance; 
+    private double balance;
     private boolean isFrozen;
 
-    
+    // Constructors
     public Account() {
         this.CCN = generateRandomCCN();
         this.balance = 0.0;
         this.isFrozen = false;
     }
 
-    public Account(double initialBalance) {
+    public Account(int pin,double initialBalance) {
         this();
         this.balance = initialBalance;
+        addCard(new Card("Waleed Farouk Mahdy",pin));
     }
 
     private int generateRandomCCN() {
         return UUID.randomUUID().toString().hashCode();
     }
 
+    // Getters and Setters
     public int getCCN() {
         return CCN;
     }
@@ -52,13 +57,13 @@ public class Account {
     public Card getCard() {
         return card;
     }
-public ArrayList<Card> getLinkedCards() {
-    ArrayList<Card> cards = new ArrayList<>();
-    if (this.card != null) {
-        cards.add(this.card);
+    public ArrayList<Card> getLinkedCards() {
+        ArrayList<Card> cards = new ArrayList<>();
+        if (this.card != null) {
+            cards.add(this.card);
+        }
+        return cards;
     }
-    return cards;
-}
 
     // Card Management
     public void addCard(Card card) {
@@ -70,12 +75,12 @@ public ArrayList<Card> getLinkedCards() {
         System.out.println("Card successfully linked to account " + CCN);
     }
 
-    public boolean withdrawMoney(int pin, int amount) {
+    public boolean withdrawMoney(int pin, double amount) {
         return withdrawMoney(pin, amount, false);
     }
 
     // Account Operations - amount parameters as int, balance as double
-    public boolean withdrawMoney(int pin, int amount,boolean internal) {
+    public boolean withdrawMoney(int pin, double amount,boolean internal) {
         if (isFrozen) {
             System.out.println("Account is frozen");
             return false;
@@ -102,8 +107,8 @@ public ArrayList<Card> getLinkedCards() {
                 Transaction transaction = new Transaction(2,this,amount);
                 DataHandler.addTransaction(transaction);
             }
-            System.out.printf("Withdrawn $%d from account %d. New balance: $%.2f%n", 
-                            amount, CCN, balance);
+            System.out.printf("Withdrawn $%f from account %d. New balance: $%.2f%n",
+                    amount, CCN, balance);
             return true;
         } else {
             System.out.println("Insufficient funds");
@@ -111,52 +116,88 @@ public ArrayList<Card> getLinkedCards() {
         }
     }
 
-    public boolean depositMoney(int pin, int amount) {
+    public boolean depositMoney(int pin, double amount) {
         return depositMoney(pin, amount, false);
     }
 
-    public boolean depositMoney(int pin, int amount,boolean internal) {
-            if (isFrozen) {
-                System.out.println("Account is frozen");
-                return false;
-            }
+    public boolean depositMoney(int pin, double amount,boolean internal) {
+        if (isFrozen) {
+            System.out.println("Account is frozen");
+            return false;
+        }
 
-            if (card == null || !card.checkPIN(pin)) {
-                System.out.println("Invalid card or PIN");
-                return false;
-            }
+        if (card == null || !card.checkPIN(pin)) {
+            System.out.println("Invalid card or PIN");
+            return false;
+        }
 
-            if (card.isExpired() || card.isDeactivated()) {
-                System.out.println("Card deactivated or expired");
-                return false;
-            }
+        if (card.isExpired() || card.isDeactivated()) {
+            System.out.println("Card deactivated or expired");
+            return false;
+        }
 
-            if (amount <= 0) {
-                System.out.println("Amount must be positive");
-                return false;
-            }
+        if (amount <= 0) {
+            System.out.println("Amount must be positive");
+            return false;
+        }
 
-            balance += amount;
-            System.out.printf("Deposited $%d to account %d. New balance: $%.2f%n",
-                    amount, CCN, balance);
-            if (!internal) {
-                Transaction transaction = new Transaction(1,this,amount);
-                DataHandler.addTransaction(transaction);
-            }
-            return true;
+        balance += amount;
+        System.out.printf("Deposited $%f to account %d. New balance: $%.2f%n",
+                amount, CCN, balance);
+        if (!internal) {
+            Transaction transaction = new Transaction(1,this,amount);
+            DataHandler.addTransaction(transaction);
+        }
+        return true;
     }
 
-    public boolean transferMoney(int pin, int amount, int targetAccount) {
+    public boolean depositMoneyToAccount(double amount,boolean internal) {
+        if (isFrozen) {
+            System.out.println("Account is frozen");
+            return false;
+        }
+
+        if (card == null) {
+            System.out.println("Invalid card");
+            return false;
+        }
+
+        if (card.isExpired() || card.isDeactivated()) {
+            System.out.println("Card deactivated or expired");
+            return false;
+        }
+
+        if (amount <= 0) {
+            System.out.println("Amount must be positive");
+            return false;
+        }
+
+        balance += amount;
+        System.out.printf("Deposited $%f to account %d. New balance: $%.2f%n",
+                amount, CCN, balance);
+        if (!internal) {
+            Transaction transaction = new Transaction(1,this,amount);
+            DataHandler.addTransaction(transaction);
+        }
+        return true;
+    }
+
+    public boolean transferMoney(int pin, double amount, int targetAccount) {
+        Account target = DataHandler.getAccount(targetAccount);
+        if (target == null) {
+            System.out.println("Account not found");
+            return false;
+        }
         if (!withdrawMoney(pin, amount,true)) {
             return false;
         }
-        if (!DataHandler.getAccount(targetAccount).depositMoney(pin, amount,true)) {
+        if (!target.depositMoneyToAccount( amount,true)) {
             return false;
         }
         Transaction transaction = new Transaction(3,this,DataHandler.getAccount(targetAccount),amount);
         DataHandler.addTransaction(transaction);
-        System.out.printf("Transferred $%d from account %d to account %d%n", 
-                         amount, CCN, targetAccount);
+        System.out.printf("Transferred $%f from account %d to account %d%n",
+                amount, CCN, targetAccount);
         return true;
     }
 
@@ -177,7 +218,7 @@ public ArrayList<Card> getLinkedCards() {
         }
         boolean matches = Math.abs(balance - expectedBalance) < 0.01;
         System.out.printf("Balance %s: Actual $%.2f vs Expected $%.2f%n",
-                        matches ? "matches" : "doesn't match", balance, expectedBalance);
+                matches ? "matches" : "doesn't match", balance, expectedBalance);
         return matches;
     }
 
@@ -189,7 +230,7 @@ public ArrayList<Card> getLinkedCards() {
     @Override
     public String toString() {
         return String.format("Account[CCN:%d, Balance:$%.2f, Frozen:%s, Card:%s]",
-                           CCN, balance, isFrozen, (card != null ? "Attached" : "None"));
+                CCN, balance, isFrozen, (card != null ? "Attached" : "None"));
     }
 
     boolean isFrozen() {

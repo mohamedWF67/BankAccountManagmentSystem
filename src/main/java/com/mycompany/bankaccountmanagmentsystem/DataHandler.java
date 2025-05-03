@@ -51,6 +51,10 @@ public class DataHandler {
         System.out.println("Account created: " + account);
     }
 
+    public static void addAccount(Account account) {
+        accounts.add(account);
+    }
+
     // Read
     public static Account getAccount(int ccn) {
         for (Account acc : accounts) {

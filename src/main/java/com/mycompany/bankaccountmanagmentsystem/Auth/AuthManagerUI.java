@@ -295,10 +295,11 @@ public class AuthManagerUI extends javax.swing.JFrame {
         String id = R_ID_txt.getText();
         String name = R_Name_txt.getText();
         String email = R_Email_txt.getText();
-        String password = R_Ph_txt.getText();
+        String password = Password_Register_txt.getText();
         String phone = R_Ph_txt.getText();
         String address = R_Add_txt.getText();
-        Client client = new Client(Integer.parseInt(id),name,phone,address,email,password,null);
+        Client client = new Client(Integer.parseInt(id),name,email,phone,address,password,null);
+        System.out.println(client.toString());
         DataHandler.createClient(client);
         JOptionPane.showMessageDialog(null, "Client created");
         new CustomerApp(client);

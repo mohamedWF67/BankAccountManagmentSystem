@@ -35,6 +35,8 @@ public class Client extends User implements Serializable {
         return newAddress;
     }
 
+
+
     public void addAccount(int pin,double initialBalance) {
         Account newAccount = new Account(pin,initialBalance);
         accounts.add(newAccount);

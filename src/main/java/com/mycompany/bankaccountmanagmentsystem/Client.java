@@ -48,6 +48,10 @@ public class Client extends User {
         return allCards;
     }
 
+    public int getClientID() {
+        return clientID;
+    }
+
     public CustomerServiceRequest submitRequest(Client client, String subject, String message) {
         return new CustomerServiceRequest(client, subject, message);
     }

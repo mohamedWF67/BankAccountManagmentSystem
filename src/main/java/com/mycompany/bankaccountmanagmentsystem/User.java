@@ -28,6 +28,22 @@ public class User {
         return "Name: " + fullname + ", Email: " + email + ", Phone: " + phone + ", Address: " + address;
     }
 
+    public String getFullname() {
+        return fullname;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
     public void updateContactInfo(String newPhone) {
        phone = newPhone;
     }

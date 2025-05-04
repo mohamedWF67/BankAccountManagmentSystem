@@ -1,5 +1,6 @@
 package com.mycompany.bankaccountmanagmentsystem;
 
+import java.io.*;
 import java.util.ArrayList;
 
 public class DataHandler {
@@ -7,15 +8,36 @@ public class DataHandler {
     private static ArrayList<Account> accounts = new ArrayList<>();
     private static ArrayList<Transaction> transactions = new ArrayList<>();
 
+    public static void setClients(ArrayList<Client> clients) {
+        DataHandler.clients = clients;
+    }
+
+    public static void setAccounts(ArrayList<Account> accounts) {
+        DataHandler.accounts = accounts;
+    }
+
+    public static void setTransactions(ArrayList<Transaction> transactions) {
+        DataHandler.transactions = transactions;
+    }
+
     // CREATE
     public static void createClient(Client client) {
         clients.add(client);
     }
 
     // READ
-    public static Client getClientByID(int clientID) {
+    public static Client getClientByEmail(int clientID) {
         for (Client c : clients) {
             if (c.setClientID(clientID) == clientID) {
+                return c;
+            }
+        }
+        return null;
+    }
+
+    public static Client getClientByEmail(String email) {
+        for (Client c : clients) {
+            if (c.getEmail().equals(email)) {
                 return c;
             }
         }
@@ -28,7 +50,7 @@ public class DataHandler {
 
     // UPDATE
     public static boolean updateClientAddress(int clientID, String newAddress) {
-        Client c = getClientByID(clientID);
+        Client c = getClientByEmail(clientID);
         if (c != null) {
             c.setAdd(newAddress);
             return true;
@@ -38,7 +60,7 @@ public class DataHandler {
 
     // DELETE
     public static boolean deleteClient(int clientID) {
-        Client c = getClientByID(clientID);
+        Client c = getClientByEmail(clientID);
         if (c != null) {
             return clients.remove(c);
         }
@@ -121,5 +143,58 @@ public class DataHandler {
     // List all transactions
     public static void listAllTransactions() {
         transactions.forEach(System.out::println);
+    }
+
+    public static ArrayList<Transaction> getTransactions() {
+        return transactions;
+    }
+
+    public static void loadAllData() {
+        try {
+            setAccounts((ArrayList<Account>) readObjectFromFile("Accounts.txt"));
+            setClients((ArrayList<Client>) readObjectFromFile("Clients.txt"));
+            setTransactions((ArrayList<Transaction>) readObjectFromFile("Transactions.txt"));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void saveObjectToFile(String filename,ArrayList<?>values) {
+        try {
+            File file = new File(filename);
+            FileOutputStream fos = new FileOutputStream(file);
+
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(values);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        //System.out.println("Saved to " + filename);
+    }
+
+    public static ArrayList<?> readObjectFromFile(String filename) {
+        ArrayList<?>List = new ArrayList<>();
+        try {
+            File file = new File(filename);
+            if (!file.exists()) {
+                return null;
+            }
+            FileInputStream fis = new FileInputStream(file);
+
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            List = (ArrayList<?>) ois.readObject();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        //System.out.println("Read from "+filename);
+        return List;
+    }
+
+    public static void saveAllData() {
+        saveObjectToFile("Accounts.txt", accounts);
+        saveObjectToFile("Clients.txt", clients);
+        saveObjectToFile("Transactions.txt", transactions);
     }
 }

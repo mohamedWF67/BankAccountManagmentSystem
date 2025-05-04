@@ -7,6 +7,8 @@ package com.mycompany.bankaccountmanagmentsystem.Auth;
 import com.mycompany.bankaccountmanagmentsystem.Client;
 import com.mycompany.bankaccountmanagmentsystem.DataHandler;
 import com.mycompany.bankaccountmanagmentsystem.MainApp.CustomerApp;
+import com.mycompany.bankaccountmanagmentsystem.ThemeManger.ThemeManager;
+import com.mycompany.bankaccountmanagmentsystem.ThemeManger.ThemeMangerUI;
 
 import javax.swing.*;
 
@@ -276,7 +278,15 @@ public class AuthManagerUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void Login_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Login_btnActionPerformed
-
+        String email = R_Email_txt.getText();
+        String password = R_Ph_txt.getText();
+        Client c = DataHandler.getClientByEmail(email);
+        if (c != null) {
+            if (c.authenticate(password)) {
+                new CustomerApp(c);
+                this.dispose();
+            }
+        }
     }//GEN-LAST:event_Login_btnActionPerformed
 
     private void Register_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Register_btnActionPerformed
@@ -295,6 +305,7 @@ public class AuthManagerUI extends javax.swing.JFrame {
 
     private void Theme_Menu_ItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Theme_Menu_ItemActionPerformed
         // TODO add your handling code here:
+        new ThemeMangerUI();
     }//GEN-LAST:event_Theme_Menu_ItemActionPerformed
 
     private void Fix_BTN_DEVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Fix_BTN_DEVActionPerformed

@@ -64,6 +64,34 @@ public class Card {
         this.cardPIN = cardPIN;
     }
 
+    public int getCardNum() {
+        return cardNum;
+    }
+
+    public String getCardHolderName() {
+        return cardHolderName;
+    }
+
+    public int getCVV() {
+        return CVV;
+    }
+
+    public int getExpiryMonth() {
+        return expiryMonth;
+    }
+
+    public int getExpiryYear() {
+        return expiryYear;
+    }
+
+    public int getCardPIN() {
+        return cardPIN;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
     // Card Operations
     public boolean validateCard(int cardNum, int CVV, int expiryMonth, int expiryYear, int PIN) {
         return this.cardNum == cardNum &&

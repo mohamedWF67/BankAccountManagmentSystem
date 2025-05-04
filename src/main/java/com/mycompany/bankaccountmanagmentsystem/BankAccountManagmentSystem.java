@@ -5,6 +5,7 @@
 package com.mycompany.bankaccountmanagmentsystem;
 
 import com.mycompany.bankaccountmanagmentsystem.Auth.AuthManagerUI;
+import com.mycompany.bankaccountmanagmentsystem.Config.InitConfig;
 
 /**
  *
@@ -13,7 +14,7 @@ import com.mycompany.bankaccountmanagmentsystem.Auth.AuthManagerUI;
 public class BankAccountManagmentSystem {
 
     public static void main(String[] args) {
-        new AuthManagerUI();
+        InitConfig instance = InitConfig.INSTANCE;
     }
 }
 

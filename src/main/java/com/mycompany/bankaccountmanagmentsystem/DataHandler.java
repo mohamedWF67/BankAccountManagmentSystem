@@ -151,9 +151,22 @@ public class DataHandler {
 
     public static void loadAllData() {
         try {
-            setAccounts((ArrayList<Account>) readObjectFromFile("Accounts.txt"));
-            setClients((ArrayList<Client>) readObjectFromFile("Clients.txt"));
-            setTransactions((ArrayList<Transaction>) readObjectFromFile("Transactions.txt"));
+            ArrayList<Account> accountsData = (ArrayList<Account>) readObjectFromFile("Accounts.txt");
+            if (accountsData != null) {
+                setAccounts(accountsData);
+            }
+            ArrayList<Transaction> transactionsData = (ArrayList<Transaction>) readObjectFromFile("Transactions.txt");
+            if (transactionsData != null) {
+                setTransactions(transactionsData);
+            }
+            ArrayList<Client> loadedClients = loadClients("clients.dat");
+            loadedClients.forEach(System.out::println);
+            for (Client c : loadedClients) {
+                System.out.println(c.getClientInfo());
+            }
+            if (loadedClients != null) {
+                setClients(loadedClients);
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -194,7 +207,28 @@ public class DataHandler {
 
     public static void saveAllData() {
         saveObjectToFile("Accounts.txt", accounts);
-        saveObjectToFile("Clients.txt", clients);
+        saveClients(clients, "clients.dat");
         saveObjectToFile("Transactions.txt", transactions);
+    }
+
+    public static void saveClients(ArrayList<Client> clients, String filePath) {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filePath))) {
+            out.writeObject(clients);
+            System.out.println("Clients saved successfully.");
+        } catch (IOException e) {
+            System.err.println("Error saving clients:");
+            e.printStackTrace();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static ArrayList<Client> loadClients(String filePath) {
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(filePath))) {
+            return (ArrayList<Client>) in.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            System.err.println("Error loading clients:");
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
     }
 }

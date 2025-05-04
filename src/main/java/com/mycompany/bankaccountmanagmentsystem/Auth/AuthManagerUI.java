@@ -278,11 +278,13 @@ public class AuthManagerUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void Login_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Login_btnActionPerformed
-        String email = R_Email_txt.getText();
-        String password = R_Ph_txt.getText();
+        String email = Email_Login_txt.getText();
+        String password = Password_Login_txt.getText();
         Client c = DataHandler.getClientByEmail(email);
+        System.out.println("Email: " + c.getEmail());
         if (c != null) {
             if (c.authenticate(password)) {
+                System.out.println("Login Successful");
                 new CustomerApp(c);
                 this.dispose();
             }

@@ -7,7 +7,7 @@ import java.io.*;
 import java.util.*;
 
 
-public class User {
+public class User implements Serializable{
     private int nationalID;
     private String fullname;
     private String email;

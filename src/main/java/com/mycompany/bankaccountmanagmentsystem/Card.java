@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.mycompany.bankaccountmanagmentsystem;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Random;
 
@@ -10,7 +11,7 @@ import java.util.Random;
  *
  * @author abrar
  */
-public class Card {
+public class Card implements Serializable {
     private int cardNum;
     private String cardHolderName;
     private int CVV;

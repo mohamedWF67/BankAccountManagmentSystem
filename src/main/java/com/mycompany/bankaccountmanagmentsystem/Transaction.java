@@ -4,6 +4,7 @@
  */
 package com.mycompany.bankaccountmanagmentsystem;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
@@ -11,7 +12,7 @@ import java.util.UUID;
  *
  * @author abrar
  */
-public class Transaction {
+public class Transaction implements Serializable {
     // Constants
     public static final int DEPOSIT = 1;
     public static final int WITHDRAWAL = 2;

@@ -4,6 +4,7 @@
  */
 package com.mycompany.bankaccountmanagmentsystem;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -14,7 +15,7 @@ import java.util.UUID;
  */
 
 
-public class Account {
+public class Account implements Serializable {
     private int CCN; // Customer Account Number
     private Card card;
     private double balance;

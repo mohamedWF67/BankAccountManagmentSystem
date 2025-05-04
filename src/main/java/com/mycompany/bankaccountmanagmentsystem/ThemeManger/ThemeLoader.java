@@ -1,9 +1,6 @@
 package com.mycompany.bankaccountmanagmentsystem.ThemeManger;
 
-import com.formdev.flatlaf.FlatDarculaLaf;
-import com.formdev.flatlaf.FlatDarkLaf;
-import com.formdev.flatlaf.FlatIntelliJLaf;
-import com.formdev.flatlaf.FlatLightLaf;
+import com.formdev.flatlaf.*;
 import com.formdev.flatlaf.intellijthemes.FlatDraculaIJTheme;
 import com.formdev.flatlaf.intellijthemes.FlatMonokaiProIJTheme;
 import com.formdev.flatlaf.intellijthemes.FlatSolarizedDarkIJTheme;
@@ -14,6 +11,8 @@ import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 
 import javax.swing.*;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 
@@ -47,6 +46,18 @@ public class ThemeLoader {
         themes.add(new FlatNightOwlIJTheme());
         themes.add(new FlatSolarizedDarkIJTheme());
         themes.add(new FlatSolarizedLightIJTheme());
+
+        System.out.println("Working dir: " + System.getProperty("user.dir"));
+
+        // 🔴 Add custom Pink theme (must be in your resource folder!)
+        try (InputStream input = new FileInputStream("themes/PinkTheme.theme.json")) {
+            LookAndFeel pinkLaf = IntelliJTheme.createLaf(input);
+            themes.add(pinkLaf);
+        } catch (Exception e) {
+            System.err.println("Could not load Pink theme:");
+            e.printStackTrace();
+        }
+
         return themes;
     }
 

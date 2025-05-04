@@ -1,0 +1,21 @@
+{
+  "name": "Pink Theme",
+  "dark": false,
+  "author": "You",
+  "colors": {
+    "Accent.Default": "#E91E63",
+    "Button.background": "#F8BBD0",
+    "Button.foreground": "#880E4F",
+    "Component.background": "#FFF0F5",
+    "TextField.background": "#FFF0F5",
+    "Text.foreground": "#4A148C"
+  },
+  "ui": {
+    "*": {
+      "Component.arc": 15,
+      "Button.arc": 999,
+      "TextComponent.arc": 10,
+      "Component.focusWidth": 2
+    }
+  }
+}

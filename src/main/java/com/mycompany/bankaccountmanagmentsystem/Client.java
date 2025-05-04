@@ -1,8 +1,9 @@
 package com.mycompany.bankaccountmanagmentsystem;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Client extends User {
+public class Client extends User implements Serializable {
     private int clientID;
     private ArrayList<Account> accounts;
 
@@ -64,5 +65,13 @@ public class Client extends User {
         // Assuming you store and manage a current or selected request elsewhere
         // You could pass a request as a parameter
         System.err.println("No request object passed. Please modify the method to include a request reference.");
+    }
+
+    @Override
+    public String toString() {
+        return "Client{" +
+                "clientID=" + clientID +
+                ", accounts=" + accounts +
+                "} " + super.toString();
     }
 }
